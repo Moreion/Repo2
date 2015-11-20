@@ -7,8 +7,6 @@ import os
 import requestsEngine
 import spreadsheetEngine
 
-APIKey = '277a6227-ee72-4cc0-af03-3a6af109bb16'
-APIKey = str(APIKey)
 
 def spreadsheetExistCheck():#       Para revisar si hay una Spreadsheet existente en el folder
     controlSpeadsheet = os.path.exists('RankedData.xlsx')
@@ -23,8 +21,10 @@ def getSummonerData():#             Para pedir la info del Summoner y su ID y gu
     global ID
     global summonerIcon
     global summonerData
+    global APIKey
     region = str.lower((str)(raw_input('Type in one of the regions above: ')))
     summonerName = str.lower((str)(raw_input('Type your Summoner Name here and DO NOT INCLUDE ANY SPACES: ')))
+    APIKey = str.lower((str)(raw_input('Type your API Key: ')))
     summonerData  = requestsEngine.requestSummonerData(region, summonerName, APIKey)
     ID = str(summonerData[summonerName]['id'])
     summonerIcon = summonerData[summonerName]['profileIconId']# Valor tipo int
