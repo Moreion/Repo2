@@ -62,9 +62,9 @@ def spreadsheetUpdater(summonerData, APIKey):# Actualiza el spreadsheet *****Fal
                 else:
                         ws['E' + a] = "Loss"
                 ws['F' + a] = summonerRecentGames['games'][i]['championId']
-                #ws['G' + a] = summonerRecentGames['games'][i]['stats']['championsKilled']# Por que no funciona?
-                ws['H' + a] = summonerRecentGames['games'][i]['stats']['numDeaths']
-                ws['I' + a] = summonerRecentGames['games'][i]['stats']['assists']
+                ws['G' + a] = summonerRecentGames['games'][i]['stats']['championsKilled']# Por que no funciona?
+                #ws['H' + a] = summonerRecentGames['games'][i]['stats']['numDeaths']
+                #ws['I' + a] = summonerRecentGames['games'][i]['stats']['assists']
                 a = int(a)
                 i += 1
                 a += 1

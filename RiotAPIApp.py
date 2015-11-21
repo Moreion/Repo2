@@ -123,14 +123,14 @@ def main():#                    ---El programa---
                 if controlDe4 == summonerData[summonerName]['revisionDate']:#     Valida si el Revision Date es el mismo
                     print "\nYour Ranked Statistics Spreadsheet is up to date\n"
                 else:#      Si el Revision Date no es el mismo se actulizará la spreadsheet
-                    spreadsheetUpdater(summonerData, APIKey)
+                    spreadsheetEngine.spreadsheetUpdater(summonerData, APIKey)
                                                             
             else:#           Si no hay spreadsheet te ofrece crear una y se actualiza
                 print "\nThere is no Ranked Statistics Spreadsheet. Would you like to create one now?"
                 controlDe4 = (str)(raw_input("Write y for Yes or n for No\n"))
                 if controlDe4 == "y":
                     spreadsheetEngine.createSpreadsheet(summonerData, APIKey)
-    
+                    spreadsheetEngine.spreadsheetUpdater(summonerData, APIKey)    
                     
                 else:#                          Si dice que no, no hace nada
                     print "Ok"
