@@ -13,13 +13,14 @@ def createSpreadsheet():#       Para crear archivo xlsx con info de Invocador  *
         ws['A1'] = 0# Agregamos el Revision Date para validar actualizaciones
         ws['A2'] = "Summoner ID:"
         ws['A3'] = "Summoner Name:"
-        ws['A4'] = "Icon:"
-        ws['A5'] = "Level:"
-        ws['A6'] = "Rank/Division:"
-        ws['A7'] = "League Points:"
-        ws['A8'] = "Win/Loss:"
-        ws['A9'] = "KDA:"
-        ws['A12'] = "Average Creep Score:"
+        ws['A4'] = "Region:"
+        ws['A5'] = "Icon:"
+        ws['A6'] = "Level:"
+        ws['A7'] = "Rank/Division:"
+        ws['A8'] = "League Points:"
+        ws['A9'] = "Win/Loss:"
+        ws['A10'] = "KDA:"
+        ws['A11'] = "Average Creep Score:"
         ws['D3'] = "My last 5 Games"
         ws['D4'] = "Type"
         ws['E4'] = "Result"
@@ -37,12 +38,13 @@ def spreadsheetUpdater(summonerName, region, ID, summonerData, summonerRankedDat
         ws = wb["Summoner Info"]
         ws['B2'] = summonerData[summonerName]['id']
         ws['B3'] = summonerData[summonerName]['name']
-        ws['B4'] = summonerData[summonerName]['profileIconId']
-        ws['B5'] = summonerData[summonerName]['summonerLevel']
+        ws['B4'] = str.capitalize(summonerData[summonerName]['region'])
+        ws['B5'] = summonerData[summonerName]['profileIconId']
+        ws['B6'] = summonerData[summonerName]['summonerLevel']
         tier = str(summonerRankedData[ID][0]['tier'])
         sumDivision =  summonerRankedData[ID][0]['entries'][0]['division']
-        ws['B6'] = tier + " " + sumDivision
-        ws['B7'] = summonerRankedData[ID][0]['entries'][0]['leaguePoints']
+        ws['B7'] = tier + " " + sumDivision
+        ws['B8'] = summonerRankedData[ID][0]['entries'][0]['leaguePoints']
 
         # Actualizar los ultimos 5 matches
         summonerRecentGames = requestsEngine.requestRecentGames(region, ID, APIKey)
@@ -56,7 +58,7 @@ def spreadsheetUpdater(summonerName, region, ID, summonerData, summonerRankedDat
                 else:
                         ws['E' + a] = "Loss"
                 ws['F' + a] = summonerRecentGames['games'][i]['championId']
-                ws['G' + a] = summonerRecentGames['games'][i]['stats']['championsKilled']# Por que no funciona?
+                #ws['G' + a] = summonerRecentGames['games'][i]['stats']['championsKilled']# Por que no funciona?
                 ws['H' + a] = summonerRecentGames['games'][i]['stats']['numDeaths']
                 ws['I' + a] = summonerRecentGames['games'][i]['stats']['assists']
                 a = int(a)

@@ -1,0 +1,5 @@
+1) Instalar Python 2.7
+2) Si es la primera vez que se instala Python resetar maquina
+2) Instalar Pip
+3) Instalar requests
+4) Instalar 
