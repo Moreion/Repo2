@@ -12,19 +12,13 @@ def spreadsheetExistCheck():#       Para revisar si hay una Spreadsheet existent
     controlSpeadsheet = os.path.exists('RankedData.xlsx')
     return controlSpeadsheet
     
-def getSummonerData():#             Para pedir la info del Summoner y su ID y guardarla global
-    print "\nEnter your region to get started"
-    print "Type in one of the following regions or else the program wont work correctly:\n"
-    print "NA EUW EUNE LAN BR KR LAS OCE TR RU PBE\n"
+def getSummonerData(region, summonerName, APIKey):#             Para pedir la info del Summoner y su ID y guardarla global
     global summonerData
-    region = str.lower((str)(raw_input('Type in one of the regions above: ')))
-    summonerName = str.lower((str)(raw_input('Type your Summoner Name here and DO NOT INCLUDE ANY SPACES: ')))
     summonerData  = requestsEngine.requestSummonerData(region, summonerName, APIKey)
     summonerData[summonerName]['region'] = region
     summonerData['summonerName'] = summonerName
     ID = str(summonerData[summonerName]['id'])
     summonerIcon = summonerData[summonerName]['profileIconId']# Valor tipo int
-    
 
 def getRankedData(summonerData, APIKey):#               Para obtener la info de Ranked del Invocador
     global summonerRankedData
@@ -54,36 +48,58 @@ def getRankedMatchIDs():
     while i < summonerRankedSoloMatchlist['totalGames']:
         RankedMatchIDs.append(summonerRankedSoloMatchlist['matches'][i]['matchId'])
         i += 1
-    print RankedMatchIDs
+
+def spreadsheetDataGraber():
+    spreadsheetGraber()
+    ws = wb["Summoner Info"]
+    global summonerData
+    ID = (str)(ws['B2'].value)
+    summonerName = str.lower((str)(ws['B3'].value))
+    summonerData = {}
+    summonerData[summonerName] = {}
+    summonerData[summonerName]['id'] = (str)(ws['B2'].value)
+    summonerData[summonerName]['name'] = (str)(ws['B3'].value)
+    summonerData[summonerName]['profileIconId'] = (str)(ws['B5'].value)
+    summonerData[summonerName]['revisionDate'] = (ws['A1'].value)
+    summonerData[summonerName]['summonerLevel'] = (str)(ws['B6'].value)
+    summonerData[summonerName]['region'] = str.lower((str)(ws['B4'].value))
+    summonerData['summonerName'] = summonerName
 
 def main():#                    ---El programa---
 
-    spreadsheetExistCheck()# Si existe spreadsheet (datos) ya no los pregunta
+    print "\nWelcome Summoner!!"
+    name = (str)(raw_input('\nType your Summoner Name here and DO NOT INCLUDE ANY SPACES: '))
+    nameMin = str.lower(name)
+    
+    spreadsheetExistCheck()# Si existe spreadsheet (datos) verifica cambios
     if spreadsheetExistCheck():
-        spreadsheetGraber()
-        ws = wb["Summoner Info"]
-        global summonerData
-        ID = (str)(ws['B2'].value)
-        summonerName = str.lower((str)(ws['B3'].value))
-        summonerData = {}
-        summonerData[summonerName] = {}
-        summonerData[summonerName]['id'] = (str)(ws['B2'].value)
-        summonerData[summonerName]['name'] = (str)(ws['B3'].value)
-        summonerData[summonerName]['profileIconId'] = (str)(ws['B5'].value)
-        summonerData[summonerName]['revisionDate'] = (ws['A1'].value)
-        summonerData[summonerName]['summonerLevel'] = (str)(ws['B6'].value)
-        summonerData[summonerName]['region'] = str.lower((str)(ws['B4'].value))
-        summonerData['summonerName'] = summonerName
-        
+        spreadsheetDataGraber()
+        if nameMin == summonerData['summonerName']:
+            print "Hello " + name
+
+        else:
+            summonerName = nameMin
+            print "\nYour summoner Data might not be updated."
+            print "\nPleas enter your region to get started"
+            print "Type in one of the following regions or else the program wont work correctly:\n"
+            print "NA EUW EUNE LAN BR KR LAS OCE TR RU PBE\n"
+            region = str.lower((str)(raw_input('Type in one of the regions above: ')))
+            getSummonerData(region, summonerName, APIKey)
+            spreadsheetEngine.spreadsheetUpdater(summonerData, APIKey)
+            print "\nYour Ranked Statistics Spreadsheet is up to date\n"
+               
     else:#   Obtener los los datos del invocador
-        getSummonerData()
-            
-    print "\nWelcome Summoner!!\n"  
+        print "\nEnter your region to get started"
+        print "Type in one of the following regions or else the program wont work correctly:\n"
+        print "NA EUW EUNE LAN BR KR LAS OCE TR RU PBE\n"
+    
+        region = str.lower((str)(raw_input('Type in one of the regions above: ')))
+        getSummonerData(region, summonerName, APIKey)
 
     #   Establecido el ID. Preguntar que hacer
     control = 0
     while control != 6:
-        print "\nWhat do you want to do?\n"
+        print "\nWhat do you want to do?"
         print "\nPruebas escribe 0"
         print "Type 1 for Rankded Stats"
         print "Type 2 for last match result"
@@ -92,6 +108,7 @@ def main():#                    ---El programa---
         print "Type 5 to get your ranked list"
         print "Type 6 for Exit\n"
         control = input()
+        
         if control == 1:#       Para imprimir datos de Ranked          
             summonerName = summonerData['summonerName']
             getRankedData(summonerData, APIKey)

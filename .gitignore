@@ -54,3 +54,5 @@ Temporary Items
 APIKey.txt
 .idea/
 APIKeyFile.py
+*.xlsx
+*.pyc

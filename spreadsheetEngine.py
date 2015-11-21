@@ -28,6 +28,7 @@ def createSpreadsheet(summonerData, APIKey):#       Para crear archivo xlsx con 
         ws['G4'] = "Kills"
         ws['H4'] = "Deaths"
         ws['I4'] = "Assists"
+        ws['J4'] = "CS"
         wb.save('RankedData.xlsx')
         print "\nSpreadsheet created\n"
 
@@ -45,9 +46,7 @@ def spreadsheetUpdater(summonerData, APIKey):# Actualiza el spreadsheet *****Fal
         ws['B4'] = str.capitalize(summonerData[summonerName]['region'])
         ws['B5'] = summonerData[summonerName]['profileIconId']
         ws['B6'] = summonerData[summonerName]['summonerLevel']
-        tier = summonerRankedData[ID][0]['tier']
-        sumDivision =  summonerRankedData[ID][0]['entries'][0]['division']
-        ws['B7'] = tier + " " + sumDivision
+        ws['B7'] = summonerRankedData[ID][0]['tier'] + " " + summonerRankedData[ID][0]['entries'][0]['division']
         ws['B8'] = summonerRankedData[ID][0]['entries'][0]['leaguePoints']
 
         # Actualizar los ultimos 5 matches
@@ -62,9 +61,20 @@ def spreadsheetUpdater(summonerData, APIKey):# Actualiza el spreadsheet *****Fal
                 else:
                         ws['E' + a] = "Loss"
                 ws['F' + a] = summonerRecentGames['games'][i]['championId']
-                ws['G' + a] = summonerRecentGames['games'][i]['stats']['championsKilled']# Por que no funciona?
-                #ws['H' + a] = summonerRecentGames['games'][i]['stats']['numDeaths']
-                #ws['I' + a] = summonerRecentGames['games'][i]['stats']['assists']
+                
+                # Para poner las kills, deaths y assists primero hay que buscar si el Key existe en el dictionary
+                if 'championsKilled' in summonerRecentGames['games'][i]['stats']:
+                        ws['G' + a] = summonerRecentGames['games'][i]['stats']['championsKilled']
+                else:
+                        ws['G' + a] = 0
+                if 'numDeaths' in summonerRecentGames['games'][i]['stats']:
+                        ws['H' + a] = summonerRecentGames['games'][i]['stats']['numDeaths']
+                else:
+                        ws['H' + a] = 0
+                if 'assists' in summonerRecentGames['games'][i]['stats']:
+                        ws['I' + a] = summonerRecentGames['games'][i]['stats']['assists']
+                else:
+                        ws['I' + a] = 0
                 a = int(a)
                 i += 1
                 a += 1

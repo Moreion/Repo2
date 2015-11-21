@@ -27,7 +27,6 @@ def requestRecentGames(summonerData, APIKey):#    Llamado para obtener info de l
     region = summonerData[summonerName]['region']
     ID = str(summonerData[summonerName]['id'])
     URL = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v1.3/game/by-summoner/" + ID + "/recent?api_key=" + APIKey
-    print URL
     response = requests.get(URL)
     if response.status_code == 200:
         return response.json()
