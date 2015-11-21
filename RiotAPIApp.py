@@ -16,23 +16,22 @@ def getSummonerData():#             Para pedir la info del Summoner y su ID y gu
     print "\nEnter your region to get started"
     print "Type in one of the following regions or else the program wont work correctly:\n"
     print "NA EUW EUNE LAN BR KR LAS OCE TR RU PBE\n"
-    global summonerName
     global summonerData
-    global region
     region = str.lower((str)(raw_input('Type in one of the regions above: ')))
     summonerName = str.lower((str)(raw_input('Type your Summoner Name here and DO NOT INCLUDE ANY SPACES: ')))
     summonerData  = requestsEngine.requestSummonerData(region, summonerName, APIKey)
     summonerData[summonerName]['region'] = region
+    summonerData['summonerName'] = summonerName
     ID = str(summonerData[summonerName]['id'])
     summonerIcon = summonerData[summonerName]['profileIconId']# Valor tipo int
     
 
-def getRankedData():#               Para obtener la info de Ranked del Invocador
+def getRankedData(summonerData, APIKey):#               Para obtener la info de Ranked del Invocador
     global summonerRankedData
-    summonerRankedData = requestsEngine.requestRankedData(region, ID, APIKey)
+    summonerRankedData = requestsEngine.requestRankedData(summonerData, APIKey)
     
 def getLastGameResult():#              Para mostrar resultado de ultima partida
-    summonerRecentGames = requestsEngine.requestRecentGames(region, ID, APIKey)
+    summonerRecentGames = requestsEngine.requestRecentGames(summonerData, APIKey)
     if summonerRecentGames['games'][0]['stats']['win']:
         print "\nYou Win\n"
     else:
@@ -46,7 +45,7 @@ def spreadsheetGraber():# Para seleccionar la spreadsheet
 
 def getRankedSoloMatchlist():
     global summonerRankedSoloMatchlist
-    summonerRankedSoloMatchlist = requestsEngine.requestRankedSoloMatchlist(region, ID, APIKey)
+    summonerRankedSoloMatchlist = requestsEngine.requestRankedSoloMatchlist(summonerData, APIKey)
 
 def getRankedMatchIDs():
     global RankedMatchIDs
@@ -63,8 +62,7 @@ def main():#                    ---El programa---
     if spreadsheetExistCheck():
         spreadsheetGraber()
         ws = wb["Summoner Info"]
-        global ID
-        global region
+        global summonerData
         ID = (str)(ws['B2'].value)
         summonerName = str.lower((str)(ws['B3'].value))
         summonerData = {}
@@ -72,9 +70,10 @@ def main():#                    ---El programa---
         summonerData[summonerName]['id'] = (str)(ws['B2'].value)
         summonerData[summonerName]['name'] = (str)(ws['B3'].value)
         summonerData[summonerName]['profileIconId'] = (str)(ws['B5'].value)
-        summonerData[summonerName]['revisionDate'] = (str)(ws['A1'].value)
+        summonerData[summonerName]['revisionDate'] = (ws['A1'].value)
         summonerData[summonerName]['summonerLevel'] = (str)(ws['B6'].value)
-        summonerData[summonerName]['region'] = (str)(ws['B4'].value)
+        summonerData[summonerName]['region'] = str.lower((str)(ws['B4'].value))
+        summonerData['summonerName'] = summonerName
         
     else:#   Obtener los los datos del invocador
         getSummonerData()
@@ -94,7 +93,9 @@ def main():#                    ---El programa---
         print "Type 6 for Exit\n"
         control = input()
         if control == 1:#       Para imprimir datos de Ranked          
-            getRankedData()
+            summonerName = summonerData['summonerName']
+            getRankedData(summonerData, APIKey)
+            ID = (str)(summonerData[summonerName]['id'])
             summonerLP = summonerRankedData[ID][0]['entries'][0]['leaguePoints']# Se tiene que convertir a str
             summonerLP = str(summonerLP)
             print "Your current Tier is: " + summonerRankedData[ID][0]['tier']
@@ -109,28 +110,28 @@ def main():#                    ---El programa---
             if spreadsheetExistCheck():#        Revisa si exite ya un archivo primero
                 print "\nThere is already a Ranked Statistics Spreadsheet\n"
             else:#                              Si no hay archivo, procede
-                spreadsheetEngine.createSpreadsheet()
-                spreadsheetEngine.spreadsheetUpdater(summonerName, region, ID, summonerData, summonerRankedData, APIKey)
-
+                spreadsheetEngine.createSpreadsheet(summonerData, APIKey)
+                spreadsheetEngine.spreadsheetUpdater(summonerData, APIKey)
+                
         elif control == 4:#      Actualizar Ranked Spreadsheet
             if spreadsheetExistCheck():#        Revisa si existe spreadsheet que actualizar
                 spreadsheetGraber()
                 ws = wb["Summoner Info"]
                 controlDe4 = (ws['A1'].value)#  Valor del ultimo cambio en la spreadsheet actual
+                summonerName = summonerData['summonerName']
                 
                 if controlDe4 == summonerData[summonerName]['revisionDate']:#     Valida si el Revision Date es el mismo
                     print "\nYour Ranked Statistics Spreadsheet is up to date\n"
                 else:#      Si el Revision Date no es el mismo se actulizará la spreadsheet
-                    getRankedData()
-                    spreadsheetEngine.spreadsheetUpdater(summonerName, region, ID, summonerData, summonerRankedData, APIKey)
-                                        
+                    spreadsheetUpdater(summonerData, APIKey)
+                                                            
             else:#           Si no hay spreadsheet te ofrece crear una y se actualiza
                 print "\nThere is no Ranked Statistics Spreadsheet. Would you like to create one now?"
                 controlDe4 = (str)(raw_input("Write y for Yes or n for No\n"))
                 if controlDe4 == "y":
-                    spreadsheetEngine.createSpreadsheet()
-                    getRankedData()
-                    spreadsheetEngine.spreadsheetUpdater(summonerName, region, ID, summonerData, summonerRankedData, APIKey)
+                    spreadsheetEngine.createSpreadsheet(summonerData, APIKey)
+    
+                    
                 else:#                          Si dice que no, no hace nada
                     print "Ok"
                 
@@ -143,8 +144,7 @@ def main():#                    ---El programa---
             break
 
         elif control == 0:# Para pruebas
-            sumName = (str)(summonerData.keys())
-            print sumName
+            print summonerData
 
 #This starts my program!
 if __name__ == "__main__":

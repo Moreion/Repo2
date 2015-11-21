@@ -11,7 +11,10 @@ def requestSummonerData(region, summonerName, APIKey):#     Here is how I make m
     else:#  Llama a funcion para imprimir razon de error
         errorReason(response.status_code)
 
-def requestRankedData(region, ID, APIKey):#     Llamado de la info de Ranked
+def requestRankedData(summonerData, APIKey):#     Llamado de la info de Ranked
+    summonerName = str(summonerData['summonerName'])
+    region = summonerData[summonerName]['region']
+    ID = str(summonerData[summonerName]['id'])
     URL = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.5/league/by-summoner/" + ID + "/entry?api_key=" + APIKey
     response = requests.get(URL)
     if response.status_code == 200:
@@ -19,7 +22,10 @@ def requestRankedData(region, ID, APIKey):#     Llamado de la info de Ranked
     else:
         errorReason(response.status_code)
 
-def requestRecentGames(region, ID, APIKey):#    Llamado para obtener info de los ultimos matches NO DETALLADA
+def requestRecentGames(summonerData, APIKey):#    Llamado para obtener info de los ultimos matches NO DETALLADA
+    summonerName = summonerData['summonerName']
+    region = summonerData[summonerName]['region']
+    ID = str(summonerData[summonerName]['id'])
     URL = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v1.3/game/by-summoner/" + ID + "/recent?api_key=" + APIKey
     response = requests.get(URL)
     if response.status_code == 200:
@@ -27,7 +33,10 @@ def requestRecentGames(region, ID, APIKey):#    Llamado para obtener info de los
     else:
         errorReason(response.status_code)
 
-def requestRankedSoloMatchlist(region, ID, APIKey):# Para obtener los matches Ranked del invocador
+def requestRankedSoloMatchlist(summonerData, APIKey):# Para obtener los matches Ranked del invocador
+    summonerName = summonerData['summonerName']
+    region = summonerData[summonerName]['region']
+    ID = str(summonerData[summonerName]['id'])
     URL = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/matchlist/by-summoner/" + ID + "?rankedQueues=RANKED_SOLO_5x5&seasons=SEASON2015&api_key=" + APIKey
     response = requests.get(URL)
     if response.status_code == 200:

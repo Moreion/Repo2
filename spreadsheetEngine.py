@@ -3,7 +3,7 @@
 from openpyxl import Workbook
 from RiotAPIApp import *
 
-def createSpreadsheet():#       Para crear archivo xlsx con info de Invocador  ***Faltan cosas
+def createSpreadsheet(summonerData, APIKey):#       Para crear archivo xlsx con info de Invocador  ***Faltan cosas
         wb = Workbook()
         ws = wb.active#         Seleccionas la hoja activa por default se crea una
        #     Para crear la primer hoja que tendra datos generales del Invocador
@@ -31,7 +31,11 @@ def createSpreadsheet():#       Para crear archivo xlsx con info de Invocador  *
         wb.save('RankedData.xlsx')
         print "\nSpreadsheet created\n"
 
-def spreadsheetUpdater(summonerName, region, ID, summonerData, summonerRankedData, APIKey):# Actualiza el spreadsheet *****Faltan muchas cosas
+def spreadsheetUpdater(summonerData, APIKey):# Actualiza el spreadsheet *****Faltan muchas cosas
+        summonerName = summonerData['summonerName']
+        ID = (str)(summonerData[summonerName]['id'])
+        region = summonerData[summonerName]['region']
+        summonerRankedData = requestsEngine.requestRankedData(summonerData, APIKey)
         from openpyxl import load_workbook
         # Actualizar la hoja de Summoner Info
         wb = load_workbook('RankedData.xlsx')
@@ -41,13 +45,13 @@ def spreadsheetUpdater(summonerName, region, ID, summonerData, summonerRankedDat
         ws['B4'] = str.capitalize(summonerData[summonerName]['region'])
         ws['B5'] = summonerData[summonerName]['profileIconId']
         ws['B6'] = summonerData[summonerName]['summonerLevel']
-        tier = str(summonerRankedData[ID][0]['tier'])
+        tier = summonerRankedData[ID][0]['tier']
         sumDivision =  summonerRankedData[ID][0]['entries'][0]['division']
         ws['B7'] = tier + " " + sumDivision
         ws['B8'] = summonerRankedData[ID][0]['entries'][0]['leaguePoints']
 
         # Actualizar los ultimos 5 matches
-        summonerRecentGames = requestsEngine.requestRecentGames(region, ID, APIKey)
+        summonerRecentGames = requestsEngine.requestRecentGames(summonerData, APIKey)
         i = 0
         a = 5
         while i < 5:#Loop para llenar los datos de los 5 matches **** No me deja definir variables dentro del loop ** No puedo sumar para CS
