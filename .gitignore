@@ -1,6 +1,10 @@
 # Archivos de Python compilados (ni se que son...)
 .pyc
 
+# Los archivos de excel que se generen con la app
+
+.xlsx
+
 ## El archivo con la API Key##
 APIKeyFile.py
 
