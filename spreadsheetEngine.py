@@ -25,15 +25,13 @@ def createSpreadsheet(summonerData, APIKey):#       Para crear archivo xlsx con 
         ws['D4'] = "Type"
         ws['E4'] = "Result"
         ws['F4'] = "Champ"
-        ws['G4'] = "Kills"
-        ws['H4'] = "Deaths"
-        ws['I4'] = "Assists"
-        ws['J4'] = "CS"
+        ws['G4'] = "KDA"
+        ws['H4'] = "CS/min"
         wb.save('RankedData.xlsx')
         print "\nSpreadsheet created\n"
 
 def spreadsheetUpdater(summonerData, APIKey):# Actualiza el spreadsheet *****Faltan muchas cosas
-        summonerName = summonerData['summonerName']
+        summonerName = summonerData.keys()[0]
         ID = (str)(summonerData[summonerName]['id'])
         region = summonerData[summonerName]['region']
         summonerRankedData = requestsEngine.requestRankedData(summonerData, APIKey)
@@ -64,17 +62,36 @@ def spreadsheetUpdater(summonerData, APIKey):# Actualiza el spreadsheet *****Fal
                 
                 # Para poner las kills, deaths y assists primero hay que buscar si el Key existe en el dictionary
                 if 'championsKilled' in summonerRecentGames['games'][i]['stats']:
-                        ws['G' + a] = summonerRecentGames['games'][i]['stats']['championsKilled']
+                        kills = (str)(summonerRecentGames['games'][i]['stats']['championsKilled'])
                 else:
-                        ws['G' + a] = 0
+                        kills = "0"
                 if 'numDeaths' in summonerRecentGames['games'][i]['stats']:
-                        ws['H' + a] = summonerRecentGames['games'][i]['stats']['numDeaths']
+                        deaths = (str)(summonerRecentGames['games'][i]['stats']['numDeaths'])
                 else:
-                        ws['H' + a] = 0
+                        deaths = "0"
                 if 'assists' in summonerRecentGames['games'][i]['stats']:
-                        ws['I' + a] = summonerRecentGames['games'][i]['stats']['assists']
+                        assists = (str)(summonerRecentGames['games'][i]['stats']['assists'])
                 else:
-                        ws['I' + a] = 0
+                        assists = "0"
+                ws['G' + a] = kills + "/" + deaths + "/" + assists
+
+                # Para poner CS primero se busan y se suman los cs de jungla (tuya y enemiga) y minions
+                if 'neutralMinionsKilled' in summonerRecentGames['games'][i]['stats']:
+                        jungla = summonerRecentGames['games'][i]['stats']['neutralMinionsKilled']
+                else:
+                        jungla = 0
+                if 'minionsKilled' in summonerRecentGames['games'][i]['stats']:
+                        minions = summonerRecentGames['games'][i]['stats']['minionsKilled']
+                else:
+                        minions = 0
+                CS = jungla + minions
+                # Calcular los minutos jugados
+                if 'timePlayed' in summonerRecentGames['games'][i]['stats']:
+                        timeMin = summonerRecentGames['games'][i]['stats']['timePlayed'] / 60.0
+                else:
+                        timeMin = 0
+                ws['H' + a] = format((CS / timeMin), '.2f')
+                
                 a = int(a)
                 i += 1
                 a += 1
