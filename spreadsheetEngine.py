@@ -27,6 +27,27 @@ def createSpreadsheet(summonerData, APIKey):#       Para crear archivo xlsx con 
         ws['F4'] = "Champ"
         ws['G4'] = "KDA"
         ws['H4'] = "CS/min"
+
+        # Segunta hoja con datos de partidas ranked 
+        ws1 = wb.create_sheet()
+        ws1.title = "Ranked Games"
+        ws = wb['Ranked Games']
+        ws['A2'] = "GameID"
+        ws ['A3'] = 0 #Asignamos un valor 0 a 
+        ws.column_dimensions['A'].hidden = True
+        ws['B2'] = "Game"
+        ws['C2'] = "Win/Loss"
+        ws['D2'] = "Champ Played"
+        ws['E2'] = "Summoner spells"
+        ws['F2'] = "Role"
+        ws['G2'] = "Kills"
+        ws['H2'] = "Deaths"
+        ws['I2'] = "Assists"
+        ws['J2'] = "Kill participation"
+        ws['K2'] = "Cs per min"
+        ws['L2'] = "Total gold"
+        ws['M2'] = "Comments"
+        
         wb.save('RankedData.xlsx')
         print "\nSpreadsheet created\n"
 
