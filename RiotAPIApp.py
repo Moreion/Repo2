@@ -146,7 +146,17 @@ def main():#                    ---El programa---
             break
 
         elif control == 0:# Para pruebas
-            print summonerData.keys()[0]
+            matchData = requestsEngine.requetsMatchData(summonerData, APIKey) # Se llama para generar Data
+            team100Deaths = 0
+            team200Deaths = 0
+            for i in matchData['participants']:
+                if i['teamId'] == 100:
+                    team100Deaths = i['stats']['deaths'] + team100Deaths
+                else:
+                    team200Deaths = i['stats']['deaths'] + team200Deaths
+            print team200Deaths
+            print team100Deaths
+
 
 #This starts my program!
 if __name__ == "__main__":

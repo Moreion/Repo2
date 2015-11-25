@@ -44,6 +44,18 @@ def requestRankedSoloMatchlist(summonerData, APIKey):# Para obtener los matches 
     else:
         errorReason(response.status_code)
 
+def requetsMatchData(summonerData, APIKey):# Para pedir info de matches por MatchID ***** Hay que incluir variavle MatchID
+    summonerName = summonerData.keys()[0]
+    region = summonerData[summonerName]['region']
+    ID = str(summonerData[summonerName]['id'])
+    matchIds = '220500470' # **** Usamos esta para probar
+    URL = "https://" + region + ".api.pvp.net/api/lol/" + region + "/v2.2/match/" + matchIds + "?api_key=" + APIKey
+    response = requests.get(URL)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        errorReason(response.status_code)
+    
 def errorReason(code):# Para imprimir razon de los errores
     if code == 400:
         print '\nBad Request\n'
