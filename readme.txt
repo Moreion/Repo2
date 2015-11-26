@@ -1,15 +1,13 @@
-Program/Tutorial Built by Farzain M.
+App to create an Excel spreadsheet with your Ranked Data and other stuff
 
-Ask me any questions/troll me on twitter @farzatv
-
-Here I explain how to get the module "requests".  Its extremely easy and the only thing that makes it hard is changing your enviroment variables. I'll explain below. If you have an other errors just GOOGLE IT!
+Credits to Farzain M. for the initial build and some of the readme instructions
 
 BEFORE YOU RUN THE PROGRAM
 
-Before doing anything, we need to install a module called "requests".  It allows the program to grab data from Riots API.  Without it, the program WILL NOT WORK.
+Before doing anything, we need to install a module called "requests" and "openpyxl". Requests allows the program to grab data from Riots API and Openyxl allow us to write/read data from the spreadsheet. Without any of them, the program WILL NOT WORK.
 
 STEP ONE
-Download Python Version 2.7.10: https://www.python.org/downloads/
+Download Python Version 2.7.10: https://www.python.org/downloads/ If its the first time you install Python I recommend to restart your computer. This helped me to solve install problems.
 
 STEP TWO
 Awesome, now you have Python! Now go to your Command Prompt or Terminal. Once your in your Terminal, simply type in "python" and press enter. 
@@ -18,7 +16,7 @@ Then you need to change your enviroment variables. There is an awesome walkthrou
 After, type in "python" in command line to ensure you did this correctly. You should see stuff.  Close and reopen Command Prompt. 
 
 STEP THREE
-In your Terminal change your directory (using the "cd" command) to where my program and all its files are. For example, if the file is on your Desktop type in: cd C:\Users\(ENTER YOUR COMPUTERS NAME HERE)\Desktop\Tut 
+In your Terminal change your directory (using the "cd" command) to where my program and all its files are. For example, if the file is on your Desktop type in: cd C:\Users\(ENTER YOUR COMPUTERS NAME HERE)\Desktop\Repo2
 
 STEP FOUR
 We need to install pip. So once your in my programs directory, type in: python get-pip.py
@@ -30,11 +28,9 @@ Then you need to change your enviroment variables. You can do this using the sam
 scripts path.  Mines is "C:\Python27\Scripts".  Type in "pip" in command line to ensure you did this correctly. You should see stuff. Close and reopen Command Prompt. 
 
 STEP SIX
-Finally, install requests. Simply type in "pip install requests"
+Install requests. Simply type in "pip install requests"
 
+STEP SEVEN
+Install openyxl. Type in "pip install openyxl"
 
-Feel free to message me on Youtube or message me on Twitter @farzatv if you have questions.
-
-PEACE OUT.
-
--Farzain M.
+Feel free to message me on Hangouts moreion@gmail.com
