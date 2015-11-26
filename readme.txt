@@ -33,4 +33,7 @@ Install requests. Simply type in "pip install requests"
 STEP SEVEN
 Install openyxl. Type in "pip install openyxl"
 
+STEP EIGHT
+Modify APIKeyFile.py file to insert your Riot API Key. Leave no spaces between the ''. You can get one at https://developer.riotgames.com/ just create an account your user. The app won´t work without your API Key.
+
 Feel free to message me on Hangouts moreion@gmail.com
