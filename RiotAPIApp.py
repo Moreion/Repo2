@@ -7,6 +7,7 @@ import os
 import requestsEngine
 import spreadsheetEngine
 from APIKeyFile import APIKey
+import staticRequests
 
 def spreadsheetExistCheck():#       Para revisar si hay una Spreadsheet existente en el folder
     controlSpeadsheet = os.path.exists('RankedData.xlsx')
@@ -146,17 +147,15 @@ def main():#                    ---El programa---
             break
 
         elif control == 0:# Para pruebas
-            matchData = requestsEngine.requetsMatchData(summonerData, APIKey) # Se llama para generar Data
-            team100Deaths = 0
-            team200Deaths = 0
-            for i in matchData['participants']:
-                if i['teamId'] == 100:
-                    team100Deaths = i['stats']['deaths'] + team100Deaths
-                else:
-                    team200Deaths = i['stats']['deaths'] + team200Deaths
-            print team200Deaths
-            print team100Deaths
-
+            from openpyxl.styles import Style, fills, PatternFill, Color
+            from openpyxl.styles import colors
+            spreadsheetEngine.createSpreadsheet(summonerData, APIKey)
+            spreadsheetGraber()
+            ws = wb["Summoner Info"]
+            celdas = ws.range('A2:A6')
+            celdas.style = Style(fill=PatternFill(patternType='solid', fgColor=Color('FFFF0000')))
+            wb.save('RankedData.xlsx')
+            
 
 #This starts my program!
 if __name__ == "__main__":

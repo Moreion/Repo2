@@ -1,4 +1,5 @@
 # -*- coding: cp1252 -*-
+
 #  -- Funciones para crear y modificar la Ranked Statistics Spreadsheet --
 
 from openpyxl import Workbook
@@ -57,6 +58,10 @@ def spreadsheetUpdater(summonerData, APIKey):# Actualiza el spreadsheet *****Fal
         ID = (str)(summonerData[summonerName]['id'])
         region = summonerData[summonerName]['region']
         summonerRankedData = requestsEngine.requestRankedData(summonerData, APIKey)
+        staticChampion = staticRequests.requestStaticChampion(summonerData, APIKey)
+        staticItem = staticRequests.requestStaticItem(summonerData, APIKey)
+        staticSpells = staticRequests.requestStaticSpells(summonerData, APIKey)
+        
         from openpyxl import load_workbook
         # Actualizar la hoja de Summoner Info
         wb = load_workbook('RankedData.xlsx')
@@ -80,7 +85,7 @@ def spreadsheetUpdater(summonerData, APIKey):# Actualiza el spreadsheet *****Fal
                         ws['E'+ a] = "Win"
                 else:
                         ws['E' + a] = "Loss"
-                ws['F' + a] = summonerRecentGames['games'][i]['championId']
+                ws['F' + a] = staticChampion['data'][(str)(summonerRecentGames['games'][i]['championId'])]['name']# Campeon usado
                 
                 # Para poner las kills, deaths y assists primero hay que buscar si el Key existe en el dictionary
                 if 'championsKilled' in summonerRecentGames['games'][i]['stats']:
@@ -129,7 +134,8 @@ def spreadsheetUpdater(summonerData, APIKey):# Actualiza el spreadsheet *****Fal
         
         ws['A' + a ] = matchData['matchId']# Llenamos el match ID de la partida
 
-        matchDuration = matchData['matchDuration'] / 60.0# Cuanto duró el match en minutos
+        matchDuration = matchData['matchDuration'] / 60.0#Cuanto duró el match en minutos
+        
         ## Para calcular las muertes de los equipos. Para kill participation
         team100Deaths = 0
         team200Deaths = 0
@@ -153,10 +159,10 @@ def spreadsheetUpdater(summonerData, APIKey):# Actualiza el spreadsheet *****Fal
                 else:
                         ws['C' + a] = "Loss"
 
-                ws['D' + a] = i['championId']
+                ws['D' + a] = staticChampion['data'][(str)(i['championId'])]['name']
                 # Summoner Spells
-                spell1 = (str)(i['spell1Id'])
-                spell2 = (str)(i['spell2Id'])
+                spell1 = staticSpells['data'][(str)(i['spell1Id'])]['name']
+                spell2 = staticSpells['data'][(str)(i['spell2Id'])]['name']
                 ws['E' + a] = spell1 + " / " + spell2
 
                 ws['F' + a] = i['timeline']['lane']
@@ -180,6 +186,8 @@ def spreadsheetUpdater(summonerData, APIKey):# Actualiza el spreadsheet *****Fal
                 
                 # Total de oro
                 ws['L' + a] = i['stats']['goldEarned']
+
+                #Color de las celdas corresponde al color del equipo del participante
                 
                 break# Fin del loop de llenadera
         
